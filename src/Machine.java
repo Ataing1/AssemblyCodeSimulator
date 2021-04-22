@@ -31,54 +31,47 @@ public class Machine {
         hexMemory.mov(SIZE.DWORD, "0c", a);
         hexMemory.mov(SIZE.DWORD, "08", new Memory(""));
         hexMemory.printMemory();
-        jump149();
-    }
 
-    public void jump100() {
-        a.setDWORD(hexMemory.get(SIZE.DWORD, "08"));
-        int intLocation = byteHexUtil.hexToByte("40") - Integer.parseInt(a.getQWORD(), 16);
-        String hexLocation = byteHexUtil.byteToHex((byte) intLocation);
-        String memByte = hexMemory.get(SIZE.BYTE, hexLocation);
-        a.setDWORD(memByte);
-        int eax = Integer.parseInt(a.getQWORD(), 16) + byteHexUtil.hexToByte("0d");
-        a.setDWORD(byteHexUtil.byteToHex((byte) eax));
-        hexMemory.mov(SIZE.BYTE, "01", a);
-        hexMemory.printMemory();
-        int op1 = byteHexUtil.hexToByte(hexMemory.get(SIZE.BYTE, "01"));
-        int op2 = byteHexUtil.hexToByte("5a");
-        if (op1 > op2) {
-            a.setDWORD(hexMemory.get(SIZE.BYTE, "01"));
-            eax = Integer.parseInt(a.getQWORD(), 16) - byteHexUtil.hexToByte("1a");
-            a.setDWORD(byteHexUtil.byteToHex((byte) eax));
-            hexMemory.mov(SIZE.BYTE, "01", a);
-        }
-        jump132();
 
-    }
-
-    public void jump132() {
-        a.setDWORD(hexMemory.get(SIZE.DWORD, "08"));
-        a.print();
-        d.setDWORD(hexMemory.get(SIZE.BYTE, "01"));
-        int intLocation = byteHexUtil.hexToByte("40") - Integer.parseInt(a.getQWORD(), 16);
-        String hexLocation = byteHexUtil.byteToHex((byte) intLocation);
-        hexMemory.mov(SIZE.BYTE, hexLocation, d);
-        int temp = byteHexUtil.hexToByte(hexMemory.get(SIZE.DWORD, "08")) + byteHexUtil.hexToByte("01");
-        hexMemory.mov(SIZE.DWORD, "08", new Memory(byteHexUtil.byteToHex((byte) temp))); //DWORD PTR [rbp-0x8],0x1
-        jump149();
-    }
-
-    public void jump149() {
         a.setDWORD(hexMemory.get(SIZE.DWORD, "08"));
         int op1 = Integer.parseInt(a.getDWORD(), 16);
         int op2 = Integer.parseInt(hexMemory.get(SIZE.DWORD, "0c"), 16);
-        if (op1 < op2) {
-            jump100();
-        } else {
-            System.out.println("FINAL ANSWER: " + hexMemory.get(SIZE.QWORD, "40"));
-            exit(0);
-        }
+        hexMemory.printMemoryEndian();
+        hexMemory.puts("40");
+        while (op1 < op2) {
+            a.setDWORD(hexMemory.get(SIZE.DWORD, "08"));
+            int intLocation = byteHexUtil.hexToByte("40") - Integer.parseInt(a.getQWORD(), 16);
+            String hexLocation = byteHexUtil.byteToHex((byte) intLocation);
+            String memByte = hexMemory.get(SIZE.BYTE, hexLocation);
+            a.setDWORD(memByte);
+            int eax = Integer.parseInt(a.getQWORD(), 16) + byteHexUtil.hexToByte("0e");
+            a.setDWORD(byteHexUtil.byteToHex((byte) eax));
+            hexMemory.mov(SIZE.BYTE, "01", a);
 
+            op1 = byteHexUtil.hexToByte(hexMemory.get(SIZE.BYTE, "01"));
+            op2 = byteHexUtil.hexToByte("5a");
+            if (op1 > op2) {
+                a.setDWORD(hexMemory.get(SIZE.BYTE, "01"));
+                eax = Integer.parseInt(a.getQWORD(), 16) - byteHexUtil.hexToByte("1a");
+                a.setDWORD(byteHexUtil.byteToHex((byte) eax));
+                hexMemory.mov(SIZE.BYTE, "01", a);
+            }
+            a.setDWORD(hexMemory.get(SIZE.DWORD, "08"));
+            d.setDWORD(hexMemory.get(SIZE.BYTE, "01"));
+            intLocation = byteHexUtil.hexToByte("40") - Integer.parseInt(a.getQWORD(), 16);
+            hexLocation = byteHexUtil.byteToHex((byte) intLocation);
+            hexMemory.mov(SIZE.BYTE, hexLocation, d);
+            int temp = Integer.parseInt(hexMemory.get(SIZE.DWORD, "08"), 16) + byteHexUtil.hexToByte("01");
+            hexMemory.mov(SIZE.DWORD, "08", new Memory(byteHexUtil.byteToHex((byte) temp))); //DWORD PTR [rbp-0x8],0x1
+
+            a.setDWORD(hexMemory.get(SIZE.DWORD, "08"));
+            op1 = Integer.parseInt(a.getDWORD(), 16);
+            op2 = Integer.parseInt(hexMemory.get(SIZE.DWORD, "0c"), 16);
+            hexMemory.puts("40");
+        }
+        hexMemory.puts("40");
 
     }
+
+
 }

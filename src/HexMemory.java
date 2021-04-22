@@ -66,7 +66,7 @@ public class HexMemory {
     }
 
     public void printMemory() {
-        System.out.println();
+        System.out.println("STANDARD HEX");
         StringBuilder stringBuilder = new StringBuilder();
         int hitEight = 0;
         for(int i = 1;i<memoryStack.length;i++){
@@ -74,6 +74,24 @@ public class HexMemory {
             hitEight++;
             if(hitEight ==8){
                 hitEight =0;
+                stringBuilder.insert(0, "-0x"+ byteHexUtil.byteToHex((byte) i)+ ": ");
+                String result = stringBuilder.toString();
+                System.out.println(result);
+                stringBuilder.setLength(0);
+            }
+        }
+    }
+
+    public void printMemoryEndian() {
+        System.out.println("LITTLE ENDIAN");
+        StringBuilder stringBuilder = new StringBuilder();
+        int hitEight = 0;
+        for(int i = 1;i<memoryStack.length;i++){
+            stringBuilder.append(memoryStack[i]);
+            hitEight++;
+            if(hitEight ==8){
+                hitEight =0;
+                stringBuilder.reverse();
                 stringBuilder.insert(0, "-0x"+ byteHexUtil.byteToHex((byte) i)+ ": ");
                 String result = stringBuilder.toString();
                 System.out.println(result);
@@ -93,6 +111,34 @@ public class HexMemory {
             index--;
         }
         return count;
+    }
+
+    public void puts(String hexLocation){
+        int index = byteHexUtil.hexToByte(hexLocation);
+        if(index<0){
+            throw new IllegalArgumentException("hex can't be negative");
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        while(!memoryStack[index].equals("00")){
+            stringBuilder.append((char) Integer.parseInt(memoryStack[index], 16));
+            index--;
+        }
+
+        System.out.println(stringBuilder.toString());
+        //System.out.println(stringBuilder.reverse().toString());
+
+
+    }
+
+    private String hexToAscii(String hexStr) {
+        StringBuilder output = new StringBuilder("");
+
+        for (int i = 0; i < hexStr.length(); i += 2) {
+            String str = hexStr.substring(i, i + 2);
+            output.append((char) Integer.parseInt(str, 16));
+        }
+
+        return output.toString();
     }
 
 
