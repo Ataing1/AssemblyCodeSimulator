@@ -1,6 +1,4 @@
-import javax.crypto.Mac;
 
-import static java.lang.System.exit;
 
 public class Machine {
     ByteHexUtil byteHexUtil;
