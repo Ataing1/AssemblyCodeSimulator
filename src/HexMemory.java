@@ -1,13 +1,12 @@
 import java.util.Arrays;
 
 public class HexMemory {
-    ByteHexUtil byteHexUtil;
     String[] memoryStack;
 
 
     public HexMemory(String hex) {
-        byteHexUtil = new ByteHexUtil();
-        int size = byteHexUtil.hexToByte(hex) + 1; //we need index 64, lets ignore 0
+
+        int size = HexUtil.hexToInt(hex) + 1; //we need index 64, lets ignore 0
         System.out.println(size);
         memoryStack = new String[size];
         System.out.println("fill mem stack");
@@ -33,7 +32,7 @@ public class HexMemory {
             default:
                 throw new IllegalArgumentException("INVALID ENUM TYPE");
         }
-        int index = byteHexUtil.hexToByte(hexLocation);
+        int index = HexUtil.hexToInt(hexLocation);
         for (int i = 0; i < movAmount; i++) {
             memoryStack[index - i] = memory.memory[i];
         }
@@ -57,7 +56,7 @@ public class HexMemory {
             default:
                 throw new IllegalArgumentException("INVALID ENUM TYPE");
         }
-        int index = byteHexUtil.hexToByte(hexLocation);
+        int index = HexUtil.hexToInt(hexLocation);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < movAmount; i++) {
              stringBuilder.insert(0, memoryStack[index - i]);
@@ -74,7 +73,7 @@ public class HexMemory {
             hitEight++;
             if(hitEight ==8){
                 hitEight =0;
-                stringBuilder.insert(0, "-0x"+ byteHexUtil.byteToHex((byte) i)+ ": ");
+                stringBuilder.insert(0, "-0x"+ Integer.toHexString(i)+ ": ");
                 String result = stringBuilder.toString();
                 System.out.println(result);
                 stringBuilder.setLength(0);
@@ -92,7 +91,7 @@ public class HexMemory {
             if(hitEight ==8){
                 hitEight =0;
                 stringBuilder.reverse();
-                stringBuilder.insert(0, "-0x"+ byteHexUtil.byteToHex((byte) i)+ ": ");
+                stringBuilder.insert(0, "-0x"+ Integer.toHexString(i)+ ": ");
                 String result = stringBuilder.toString();
                 System.out.println(result);
                 stringBuilder.setLength(0);
@@ -101,7 +100,7 @@ public class HexMemory {
     }
 
     public int strlen(String hexLocation) {
-        int index = byteHexUtil.hexToByte(hexLocation);
+        int index = HexUtil.hexToInt(hexLocation);
         if(index<0){
             throw new IllegalArgumentException("hex can't be negative");
         }
@@ -114,7 +113,7 @@ public class HexMemory {
     }
 
     public void puts(String hexLocation){
-        int index = byteHexUtil.hexToByte(hexLocation);
+        int index = HexUtil.hexToInt(hexLocation);
         if(index<0){
             throw new IllegalArgumentException("hex can't be negative");
         }
@@ -126,9 +125,9 @@ public class HexMemory {
 
         System.out.println(stringBuilder.toString());
         //System.out.println(stringBuilder.reverse().toString());
-
-
     }
+
+
 
 
 }

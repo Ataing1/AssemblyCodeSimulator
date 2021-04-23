@@ -2,9 +2,12 @@ import java.util.Arrays;
 
 public class Main {
 
+
     public static void main (String [] args){
-        Machine machine = new Machine();
-        machine.main();
+//        Machine machine = new Machine();
+//        machine.main();
+        ShiftChallenge shiftChallenge = new ShiftChallenge();
+        shiftChallenge.main();
 
     }
 

@@ -9,7 +9,7 @@ public class Memory {
     public Memory(String hex) {
 
         memory = new String[8];
-        setQWORD(hex);
+        setR_X(hex);
     }
 
     public Memory(Memory memory1){
@@ -18,7 +18,7 @@ public class Memory {
     }
 
 
-    public void setQWORD(String hex) {
+    public void setR_X(String hex) {
         checkHex(hex.length(), 16);
         hex = fillHex(hex);
         Arrays.fill(memory, "");
@@ -29,7 +29,7 @@ public class Memory {
         }
     }
 
-    public void setDWORD(String hex) {
+    public void setE_X(String hex) {
         checkHex(hex.length(), 8);
         hex = fillHex(hex);
         Arrays.fill(memory, "");
@@ -40,19 +40,8 @@ public class Memory {
         }
     }
 
-    /**
-     * allows for single byte swapping
-     * @param hex the new byte to by swapped
-     * @param position the position where the new byte should go
-     */
-    public void setByte(String hex, int position) {
-        checkHex(hex.length(), 2);
-        memory[position] += hex.charAt(0);
-        memory[position] += hex.charAt(1);
-    }
-
     private void checkHex(int hexLength, int size) {
-        if (hexLength > size || hexLength % 2 == 1) {
+        if (hexLength > size) {
             throw new IllegalArgumentException(
                     "Invalid hexadecimal String supplied.");
         }
@@ -66,7 +55,7 @@ public class Memory {
         return hexBuilder.toString();
     }
 
-    public String getDWORD() {
+    public String getE_X() {
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 0;i<4;i++){
             stringBuilder.insert(0, memory[i]);
@@ -74,7 +63,7 @@ public class Memory {
         return stringBuilder.toString();
     }
 
-    public String getQWORD() {
+    public String getR_X() {
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 0;i<8;i++){
             stringBuilder.insert(0, memory[i]);
@@ -86,6 +75,28 @@ public class Memory {
         return memory[0];
     }
 
+    public void shl(String hex){
+        int index = Integer.parseInt(hex,16);
+        long memoryValue = Long.parseLong(getR_X(), 16);
+        memoryValue =  memoryValue<<index;
+        setE_X(Long.toHexString(memoryValue));
+    }
+
+    public void sar(String hex){
+        int index = Integer.parseInt(hex,16);
+        long memoryValue = Long.parseLong(getR_X(), 16);
+        memoryValue =  memoryValue>>index;
+        setE_X(Long.toHexString(memoryValue));
+    }
+
+    public void and(String hex){
+        int index = Integer.parseInt(hex,16);
+        long memoryValue = Long.parseLong(getR_X(), 16);
+        memoryValue =  memoryValue&index;
+        setE_X(Long.toHexString(memoryValue));
+    }
+
+
     public void print(){
         System.out.println("IN HEX FORMAT:");
         printHex();
@@ -94,9 +105,10 @@ public class Memory {
     }
 
     public void printHex() {
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append("0x");
         for (int i = 7; i >= 0; i--) {
+
             stringBuffer.append(memory[i]);
         }
         System.out.println(stringBuffer.toString());
@@ -104,10 +116,5 @@ public class Memory {
 
     public void printEndian() {
         System.out.println(Arrays.toString(memory));
-        String[] forPrint = new String[8];
-        for (int i = 0; i < 8; i++) {
-            forPrint[i] = i + " ";
-        }
-        System.out.println(Arrays.toString(forPrint));
     }
 }
